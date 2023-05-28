@@ -351,12 +351,14 @@ impl PageElem {
 
             // CQUPT's requirements are a bit weird.
             let mut margin = margin.clone();
+            // We need 1cm offset, but need to half that first when set offset.
+            let margin_offset = Abs::cm(0.5);
             if number.get() % 2 == 0 {
-                margin.left -= Abs::cm(1.0);
-                margin.right += Abs::cm(1.0);
+                margin.left -= margin_offset;
+                margin.right += margin_offset;
             } else {
-                margin.right -= Abs::cm(1.0);
-                margin.left += Abs::cm(1.0);
+                margin.right -= margin_offset;
+                margin.left += margin_offset;
             }
 
             // The padded width of the page's content without margins.
