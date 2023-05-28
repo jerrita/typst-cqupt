@@ -179,24 +179,48 @@ impl Layout for TableElem {
                 let half = thickness / 2.0;
 
                 // Render horizontal lines.
-                for offset in points(rows.iter().map(|piece| piece.height)) {
-                    let target = Point::with_x(frame.width() + thickness);
-                    let hline = Geometry::Line(target).stroked(stroke.clone());
-                    frame.prepend(
-                        Point::new(-half, offset),
-                        FrameItem::Shape(hline, self.span()),
-                    );
+                // for offset in points(rows.iter().map(|piece| piece.height)) {
+                //     let target = Point::with_x(frame.width() + thickness);
+                //     let hline = Geometry::Line(target).stroked(stroke.clone());
+                //     frame.prepend(
+                //         Point::new(-half, offset),
+                //         FrameItem::Shape(hline, self.span()),
+                //     );
+                // }
+
+                // Render horizontal lines.
+                // But we need three-part table in CQUPT thesis.
+                let mut offset = Abs::zero();
+                let mut count = 0;
+                for row in rows {
+                    if count == 0 || count == 1 || count == rows.len() - 1 {
+                        let target = Point::with_x(frame.width() + thickness);
+                        let mut stroke = stroke.clone();
+                        if count == 1 {
+                            stroke.thickness = half;
+                        }
+                        let hline = Geometry::Line(target).stroked(stroke);
+                        if count == rows.len() - 1 {
+                            offset += row.height
+                        }
+                        frame.prepend(
+                            Point::new(-half, offset),
+                            FrameItem::Shape(hline, self.span()),
+                        );
+                    }
+                    offset += row.height;
+                    count += 1;
                 }
 
                 // Render vertical lines.
-                for offset in points(layout.cols.iter().copied()) {
-                    let target = Point::with_y(frame.height() + thickness);
-                    let vline = Geometry::Line(target).stroked(stroke.clone());
-                    frame.prepend(
-                        Point::new(offset, -half),
-                        FrameItem::Shape(vline, self.span()),
-                    );
-                }
+                // for offset in points(layout.cols.iter().copied()) {
+                //     let target = Point::with_y(frame.height() + thickness);
+                //     let vline = Geometry::Line(target).stroked(stroke.clone());
+                //     frame.prepend(
+                //         Point::new(offset, -half),
+                //         FrameItem::Shape(vline, self.span()),
+                //     );
+                // }
             }
 
             // Render cell backgrounds.

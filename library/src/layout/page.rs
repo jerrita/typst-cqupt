@@ -345,9 +345,19 @@ impl PageElem {
             Size::zero(),
         );
 
-        // Post-process pages.
+        // Post-process pages
         for frame in fragment.iter_mut() {
             tracing::info!("Layouting page #{number}");
+
+            // CQUPT's requirements are a bit weird.
+            let mut margin = margin.clone();
+            if number.get() % 2 == 0 {
+                margin.left -= Abs::cm(1.0);
+                margin.right += Abs::cm(1.0);
+            } else {
+                margin.right -= Abs::cm(1.0);
+                margin.left += Abs::cm(1.0);
+            }
 
             // The padded width of the page's content without margins.
             let pw = frame.width();

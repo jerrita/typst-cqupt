@@ -565,6 +565,12 @@ fn create(
         .bibliography(&*bibliography_style, None)
         .into_iter()
         .map(|reference| {
+            {
+                // Print the bibliography key
+                // So we can use an external tool to find the entry and do workaround.
+                let key = reference.entry.key();
+                println!("@{}", &key);
+            }
             let backlink = ref_location(reference.entry);
             let prefix = reference.prefix.map(|prefix| {
                 // Format and link to first citation.
